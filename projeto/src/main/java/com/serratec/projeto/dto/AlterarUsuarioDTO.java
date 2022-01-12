@@ -1,0 +1,97 @@
+package com.serratec.projeto.dto;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+import com.serratec.projeto.model.Nivel;
+import com.serratec.projeto.model.Equipe;
+
+public class AlterarUsuarioDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -672174063424967326L;
+
+	private Nivel nivel;
+	private String email;
+	private Equipe equipe;
+	private String nome;
+	private String password;
+	private LocalDate dataPodeIniciarferias;
+	private LocalDate dataDeveIniciarferias;
+	public LocalDate dataVencimento;
+	public LocalDate dataContratacao;
+
+	public Nivel getNivel() {
+		return nivel;
+	}
+
+	public void setNivel(Nivel nivel) {
+		this.nivel = nivel;
+	}
+
+	public LocalDate getDataPodeIniciarferias() {
+		return dataPodeIniciarferias;
+	}
+
+	public void setDataPodeIniciarferias(LocalDate dataPodeIniciarferias) {
+		this.dataPodeIniciarferias = dataPodeIniciarferias;
+	}
+
+	public LocalDate getDataDeveIniciarferias() {
+		return dataDeveIniciarferias;
+	}
+
+	public void setDataDeveIniciarferias(LocalDate dataDeveIniciarferias) {
+		this.dataDeveIniciarferias = dataDeveIniciarferias;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Equipe getEquipe() {
+		return equipe;
+	}
+
+	public void setEquipe(Equipe equipe) {
+		this.equipe = equipe;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public LocalDate getDataVencimento() {
+		return dataVencimento;
+	}
+
+	public void setDataVencimento(LocalDate dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+
+	public LocalDate getDataContratacao() {
+		return dataContratacao;
+	}
+
+	public void setDataContratacao(LocalDate dataContratacao) {
+		this.dataContratacao = dataContratacao;
+	}
+
+}
