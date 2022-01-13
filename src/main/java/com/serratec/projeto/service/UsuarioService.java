@@ -85,7 +85,7 @@ public class UsuarioService {
 		
 		String texto = "Usuario cadastrado com sucesso!\nSeu Login: %s \nSua Senha: %s\nAo acessar pela primeira vez mude a sua senha!\nAcesse pelo Link para mudar: %s";
 		texto = String.format(texto, usuario.getEmail(), usuario.getPassword(), "LinkDaPag");
-		mailConfig.enviarEmail(usuario.getEmail(), "Cadastro de Usuário Concluído", texto);
+		mailConfig.enviarEmail(criarUsuarioDTO.getEmail(), "Cadastro de Usuário Concluído", texto);
 		
 		return new UsuarioDTO(usuario);
 

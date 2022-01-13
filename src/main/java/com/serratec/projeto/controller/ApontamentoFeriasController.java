@@ -21,6 +21,7 @@ import com.serratec.projeto.dto.AlterarApontamentoFeriasDTO;
 import com.serratec.projeto.dto.ApontamentoFeriasDTO;
 import com.serratec.projeto.dto.BuscarMembrosFolgaDiaDTO;
 import com.serratec.projeto.dto.CriarApontamentoFeriasDTO;
+import com.serratec.projeto.dto.CriarMarcarFolgaPorPeriodoDTO;
 import com.serratec.projeto.dto.UsuarioDTO;
 import com.serratec.projeto.model.ApontamentoFerias;
 import com.serratec.projeto.service.ApontamentoFeriasService;
@@ -51,6 +52,19 @@ public class ApontamentoFeriasController {
 
 	public CriarApontamentoFeriasDTO criarApontamentoFerias(@RequestBody CriarApontamentoFeriasDTO request) {
 		return service.marcarFolga(request);
+	}
+	
+	@PostMapping("/periodo")
+	@ApiOperation(value = "Cadastrar um apontamento", notes = "Cadastro de um apontamento de férias")
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Cadastra um apontamento de férias"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Recurso proibido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro de servidor") })
+	@ResponseStatus(HttpStatus.CREATED)
+
+	public List<CriarApontamentoFeriasDTO> criarApontamentoFeriasPorPeriodo(@RequestBody CriarMarcarFolgaPorPeriodoDTO request) {
+		return service.marcarFolgaPorPeriodo(request);
 	}
 
 	@GetMapping

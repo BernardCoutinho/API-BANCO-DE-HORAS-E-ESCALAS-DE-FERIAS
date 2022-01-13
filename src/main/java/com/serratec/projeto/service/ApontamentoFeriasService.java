@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import com.serratec.projeto.config.MailConfig;
 import com.serratec.projeto.dto.AlterarApontamentoFeriasDTO;
 import com.serratec.projeto.dto.ApontamentoFeriasDTO;
 import com.serratec.projeto.dto.CriarApontamentoFeriasDTO;
+import com.serratec.projeto.dto.CriarMarcarFolgaPorPeriodoDTO;
 import com.serratec.projeto.dto.UsuarioDTO;
 import com.serratec.projeto.exception.RecursoBadRequestException;
 import com.serratec.projeto.exception.RecursoNotFoundException;
@@ -170,32 +172,44 @@ public class ApontamentoFeriasService {
 	}
 	
 	
-	public List<CriarApontamentoFeriasDTO> marcarFolgaPorPeriodo(LocalDate dataI, LocalDate dataF, Long idUsuario) 
+	public List<CriarApontamentoFeriasDTO> marcarFolgaPorPeriodo(CriarMarcarFolgaPorPeriodoDTO request) 
 			throws RecursoBadRequestException{
-		Usuario user = usuarioRepository.getById(idUsuario);
-		List<LocalDate> dates = Stream.iterate(dataI, date -> date.plusDays(1))
-			    .limit(ChronoUnit.DAYS.between(dataI, dataF))
+		Usuario user = usuarioRepository.getById(request.getIdUsuario());
+		List<LocalDate> dates = Stream.iterate(request.getDataInicial(), date -> date.plusDays(1))
+			    .limit(ChronoUnit.DAYS.between(request.getDataInicial(), request.getDataFinal().plusDays(1)))
 			    .collect(Collectors.toList());
 		List<CriarApontamentoFeriasDTO> listaDiasMarcados = new ArrayList<CriarApontamentoFeriasDTO>();
-		List<Boolean> listB = dates.stream().map((u) -> verificaPossibilidadeFolga(u, user)).collect(Collectors.toList());
+		List<String> listB = dates.stream().map((u) -> verificaPossibilidadeFolga(u, user)).collect(Collectors.toList());
 		boolean pode = true;
-		for(boolean b : listB ) {
+		
+		for(String b : listB ) {
 			
-			if(b == false) {
+			if(b.contains("ERROR!")) {
 				pode = false;
 			}
 		}
 		if(pode == true) {
+			
 			dates.stream().forEach((d) ->{
 			CriarApontamentoFeriasDTO aponta = new CriarApontamentoFeriasDTO();
-			aponta.setDiaFolga(dataF);
-			aponta.setId_usuario(idUsuario);
+			aponta.setDiaFolga(d);
+			if(aponta.getDiaFolga().getDayOfWeek() == DayOfWeek.SUNDAY) {
+				System.out.println("Domingo");
+			}else {
+				
+			aponta.setId_usuario(request.getIdUsuario());
+			aponta.setNome(user.getNome());
 			listaDiasMarcados.add(aponta);
 			criarApontamentoFerias(aponta);
+			}
+			
 			});	
 			return listaDiasMarcados;
 		}else {
-			throw new RecursoBadRequestException("Periodo inválido");
+			String erros = Arrays.asList(listB).stream()
+	                .map(Object::toString)
+	                .collect(Collectors.joining(", ")).replace("[", "").replace("]", "");
+			throw new RecursoBadRequestException(erros);
 		}
 		
 		
@@ -245,11 +259,12 @@ public class ApontamentoFeriasService {
 		List<ApontamentoFerias> listaTotal = apontamentoFeriasRepository.findAll();
 		for (ApontamentoFerias aponta : listaTotal) {
 			DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
-			String diaApont = df.format(dia);
-			String diaRequest = df.format(aponta.getDiaFolga());
-			if(diaApont.equals(diaRequest) && aponta.getUsuario().equals(user)) {
-				throw new RecursoBadRequestException(
-						"Você já marcou férias neste dia!");
+			String diaApont = df.format(aponta.getDiaFolga());
+			String diaRequest = df.format(dia);
+			
+			if(diaApont.equals(diaRequest) && aponta.getUsuario().getIdUsuario() == user.getIdUsuario()) {
+				throw new RecursoBadRequestException(String.format(
+						"Você já marcou férias no dia %s!",diaApont));
 			}		
 		}
 	}
@@ -264,7 +279,7 @@ public class ApontamentoFeriasService {
 	 * @throws RecursoBadRequestException
 	 */
 
-	public Boolean verificaPossibilidadeFolga(LocalDate dia, Usuario usuarioRequest) throws RecursoBadRequestException {
+	public String verificaPossibilidadeFolga(LocalDate dia, Usuario usuarioRequest) throws RecursoBadRequestException {
 		Usuario userRequest = usuarioRequest; 
 		if(userRequest.getQtdDiasFerias() == 0)
 			throw new RecursoBadRequestException("Você já usou todas as sua férias!");
@@ -274,9 +289,17 @@ public class ApontamentoFeriasService {
 		List<UsuarioDTO> listaUsuarios = listaUsuariosDaEquipeDeFolgaNoDia(dia, idEquipe);
 		int senior = 0, junior = 0, trainee = 0, pleno = 0;
 		int quantMembros = equipeService.tamanhoEquipe(idEquipe);
+			
+		DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
+		String response;
+		if (dia.isAfter(userRequest.getDataVencimento())
+				|| dia.isBefore(userRequest.getDataPodeIniciarFerias())) {
+			return("Não foi possível marcar a folga! Marque entre "
+					+ df.format(userRequest.getDataPodeIniciarFerias()) + " e " + df.format(userRequest.getDataVencimento()));
+		}else {
+		
 		for (UsuarioDTO user : listaUsuarios) {
 			if (user.getNivel() == Nivel.SENIOR) {
-				System.out.println("Entrou no if Senior");
 				senior += 1;
 			} else if (user.getNivel() == Nivel.PLENO) {
 				pleno += 1;
@@ -286,63 +309,64 @@ public class ApontamentoFeriasService {
 				trainee += 1;
 			}
 		}
-		if (userRequest.getNivel() == Nivel.SENIOR) {
-			if (senior >= 2 && quantMembros <= 12) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Sêniors de folga para um time pequeno já foi alcançado (2)!");
-			} else if (senior >= 6 && quantMembros > 12 && quantMembros <= 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Sêniors de folga para um time médio já foi alcançado (6)!");
-			} else if (senior >= 8 && quantMembros > 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Sêniors de folga para um time grande já foi alcançado (8)!");
+			if (userRequest.getNivel() == Nivel.SENIOR) {
+				if (senior >= 2 && quantMembros <= 12) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time pequeno já foi alcançado (2)!", df.format(dia));
+					return (response);
+				} else if(senior >= 6 && quantMembros > 12 && quantMembros <= 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time médio já foi alcançado (6)!", df.format(dia));
+					return (response);
+				} else if(senior >= 8 && quantMembros > 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time grande já foi alcançado (8)!", df.format(dia));
+					return (response);
+				} else {
+					return "OK";
+				}
+	
+			} else if (userRequest.getNivel() == Nivel.PLENO) {
+				if (pleno >= 1 && quantMembros <= 12) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time pequeno já foi alcançado (2)!", df.format(dia));
+					return (response);
+				} else if(pleno >= 6 && quantMembros > 12 && quantMembros <= 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time médio já foi alcançado (6)!", df.format(dia));
+					return (response);
+				} else if(pleno >= 8 && quantMembros > 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time grande já foi alcançado (8)!", df.format(dia));
+					return (response);
+				} else {
+					return "OK";
+				}
+	
+			} else if (userRequest.getNivel() == Nivel.JUNIOR) {
+				if (junior >= 1 && quantMembros <= 12) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Juniors de folga para um time pequeno já foi alcançado (1)!", df.format(dia));
+					return (response);
+				} else if (junior >= 6 && quantMembros > 12 && quantMembros <= 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Juniors de folga para um time médio já foi alcançado (6)!", df.format(dia));
+					return (response);
+				} else if (junior >= 8 && quantMembros > 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Juniors de folga para um time grande já foi alcançado (8)!", df.format(dia));
+					return (response);
+				} else {
+					return "OK";
+				}
+	
+			} else if (userRequest.getNivel() == Nivel.TRAINEE) {
+				if (trainee >= 1 && quantMembros <= 12) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Treinees de folga para um time pequeno já foi alcançado (1)!", df.format(dia));
+					return (response);
+				} else if(trainee >= 6 && quantMembros > 12 && quantMembros <= 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Treiness de folga para um time médio já foi alcançado (6)!", df.format(dia));
+					return (response);
+				} else if(trainee >= 8 && quantMembros > 24) {
+					response = String.format("ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Treinees de folga para um time grande já foi alcançado (8)!", df.format(dia));
+					return (response);
+				} else {
+					return "OK";
+				}
 			} else {
-				return true;
+				throw new RecursoBadRequestException("Parâmetros inválidos!");
 			}
-
-		} else if (userRequest.getNivel() == Nivel.PLENO) {
-			if (pleno >= 2 && quantMembros <= 12) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Plenos de folga para um time pequeno já foi alcançado (2)!");
-			} else if (pleno >= 6 && quantMembros > 12 && quantMembros <= 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Plenos de folga para um time médio já foi alcançado (6)!");
-			} else if (pleno >= 8 && quantMembros > 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Plenos de folga para um time grande já foi alcançado (8)!");
-			} else {
-				return true;
-			}
-
-		} else if (userRequest.getNivel() == Nivel.JUNIOR) {
-			if (junior >= 2 && quantMembros <= 12) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Juniors de folga para um time pequeno já foi alcançado (2)!");
-			} else if (junior >= 6 && quantMembros > 12 && quantMembros <= 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Juniors de folga para um time médio já foi alcançado (6)!");
-			} else if (junior >= 8 && quantMembros > 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Juniors de folga para um time grande já foi alcançado (8)!");
-			} else {
-				return true;
-			}
-
-		} else if (userRequest.getNivel() == Nivel.TRAINEE) {
-			if (trainee >= 2 && quantMembros <= 12) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Treinees de folga para um time pequeno já foi alcançado (4)!");
-			} else if (trainee >= 6 && quantMembros > 12 && quantMembros <= 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Treiness de folga para um time médio já foi alcançado (6)!");
-			} else if (trainee >= 8 && quantMembros > 24) {
-				throw new RecursoBadRequestException(
-						"Não foi possível marcar as férias! Número máximo de Treinees de folga para um time grande já foi alcançado (8)!");
-			} else {
-				return true;
-			}
-		} else {
-			throw new RecursoBadRequestException("Parâmetros inválidos!");
 		}
 	}
 
@@ -362,23 +386,20 @@ public class ApontamentoFeriasService {
 
 		if (request.getDiaFolga().isAfter(user.getDataVencimento())
 				|| request.getDiaFolga().isBefore(user.getDataPodeIniciarFerias())) {
-
 			DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
 			throw new RecursoBadRequestException("Não foi possível marcar a folga! Marque entre "
 					+ df.format(user.getDataPodeIniciarFerias()) + " e " + df.format(user.getDataVencimento()));
 		} else {
 			if (diaDaSemana == DayOfWeek.SUNDAY) {
 				throw new RecursoBadRequestException("Não é possível marcar férias no Domingo!");
-
 			} else {
-				boolean pode = false;
-				pode = verificaPossibilidadeFolga(request.getDiaFolga(), user);
-
-				if (pode == true) {
-					return criarApontamentoFerias(request);
-
+				String resposta;
+				resposta = verificaPossibilidadeFolga(request.getDiaFolga(), user);
+				if (resposta.contains("ERROR!")) {
+					throw new RecursoBadRequestException(resposta);
 				} else {
-					throw new RecursoBadRequestException("Não foi possível marcar as férias");
+					return criarApontamentoFerias(request);
+					
 				}
 			}
 		}

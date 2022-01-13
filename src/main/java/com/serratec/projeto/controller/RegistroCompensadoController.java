@@ -72,6 +72,18 @@ public class RegistroCompensadoController {
 		return service.buscarPorId(id);
 
 	}
+	@GetMapping("/usuario/{id}")
+	@ApiOperation(value = "Buscar os registros compensados de um usuário", notes = "Busca os registros compensados de um usuário")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna os registros compensados do usuário"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Recurso proibido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro de servidor") })
+	public ResponseEntity<List<RegistroCompensado>> listRegUser(@PathVariable Long id) {
+	
+		return service.listarRegUsuario(id);
+
+	}
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Alterar registro compensado", notes = "Alteração de um registro compensado")

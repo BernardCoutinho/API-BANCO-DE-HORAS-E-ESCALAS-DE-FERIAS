@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 public class Foto {
 
@@ -18,6 +20,7 @@ public class Foto {
 	private Long id;
 
 	@Lob
+	@Type(type = "org.hibernate.type.ImageType")
 	private byte[] dados;
 
 	@Column

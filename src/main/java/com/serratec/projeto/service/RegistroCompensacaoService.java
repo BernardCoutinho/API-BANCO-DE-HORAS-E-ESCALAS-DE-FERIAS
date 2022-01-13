@@ -3,6 +3,7 @@ package com.serratec.projeto.service;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,15 @@ public class RegistroCompensacaoService {
 	public List<RegistroCompensacao> listar() {
 		return repository.findAll();
 
+	}
+	
+	public ResponseEntity<List<RegistroCompensacao>> listarRegUsuario(Long id) throws RecursoNotFoundException{
+		if(!usuarioRepository.existsById(id))
+			throw new RecursoNotFoundException("Usuário não encontrado");
+		
+		List<RegistroCompensacao> listR = repository.findAll();
+		listR = listR.stream().filter((u) -> u.getUsuario().getIdUsuario() == id).collect(Collectors.toList());
+		return ResponseEntity.ok(listR);
 	}
 
 	/**

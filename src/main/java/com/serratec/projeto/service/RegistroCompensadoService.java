@@ -3,6 +3,7 @@ package com.serratec.projeto.service;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import com.serratec.projeto.dto.AlterarRegistroCompensadoDTO;
 import com.serratec.projeto.dto.CriarRegistroCompensadoDTO;
 import com.serratec.projeto.dto.RegistroCompensadoDTO;
 import com.serratec.projeto.exception.RecursoNotFoundException;
+import com.serratec.projeto.model.RegistroCompensacao;
 import com.serratec.projeto.model.RegistroCompensado;
 import com.serratec.projeto.repository.RegistroCompensadoRepository;
 import com.serratec.projeto.repository.UsuarioRepository;
@@ -58,6 +60,14 @@ public class RegistroCompensadoService {
 	public List<RegistroCompensado> listar() {
 		return repository.findAll();
 
+	}
+	public ResponseEntity<List<RegistroCompensado>> listarRegUsuario(Long id) throws RecursoNotFoundException{
+		if(!usuarioRepository.existsById(id))
+			throw new RecursoNotFoundException("Usuário não encontrado");
+		
+		List<RegistroCompensado> listR = repository.findAll();
+		listR = listR.stream().filter((u) -> u.getUsuario().getIdUsuario() == id).collect(Collectors.toList());
+		return ResponseEntity.ok(listR);
 	}
 
 	/**

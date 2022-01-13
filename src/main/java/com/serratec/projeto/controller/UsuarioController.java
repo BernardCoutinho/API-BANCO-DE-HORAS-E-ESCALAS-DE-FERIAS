@@ -80,17 +80,17 @@ public class UsuarioController {
 		}
 	}
 
-	@PostMapping("/fotos/adicionar")
+	@PostMapping("/fotos/adicionar/{id}")
 	@ApiOperation(value = "Adicionar uma foto a um usuario", notes = "Inserção de uma foto para um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna o usuario e a foto inserida"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 500, message = "Erro de servidor") })
-	public ResponseEntity<Object> inserirFoto(@Valid  @RequestBody Long idUsuario,
-			@RequestPart("file") MultipartFile file) {
+	public ResponseEntity<Object> inserirFoto(@PathVariable Long id,
+			@RequestParam("file") MultipartFile file) {
 		try {
-			return ResponseEntity.ok(fotoService.inserir(idUsuario, file));
+			return ResponseEntity.ok(fotoService.inserir(id, file));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
