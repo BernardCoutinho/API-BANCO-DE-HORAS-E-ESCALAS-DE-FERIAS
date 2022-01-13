@@ -3,13 +3,8 @@ package com.serratec.projeto.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import com.serratec.projeto.model.Usuario;
-
 public class AlterarApontamentoFeriasDTO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8104767388433616676L;
 
 	private LocalDate diaFolga;
@@ -30,7 +25,4 @@ public class AlterarApontamentoFeriasDTO implements Serializable {
 	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-
-	
-
 }

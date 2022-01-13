@@ -14,7 +14,6 @@ import com.serratec.projeto.dto.AlterarRegistroCompensadoDTO;
 import com.serratec.projeto.dto.CriarRegistroCompensadoDTO;
 import com.serratec.projeto.dto.RegistroCompensadoDTO;
 import com.serratec.projeto.exception.RecursoNotFoundException;
-import com.serratec.projeto.model.RegistroCompensacao;
 import com.serratec.projeto.model.RegistroCompensado;
 import com.serratec.projeto.repository.RegistroCompensadoRepository;
 import com.serratec.projeto.repository.UsuarioRepository;

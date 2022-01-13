@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.serratec.projeto.dto.UsuarioFotoDTO;
 import com.serratec.projeto.exception.RecursoNotFoundException;
 import com.serratec.projeto.model.Foto;
 import com.serratec.projeto.model.Usuario;

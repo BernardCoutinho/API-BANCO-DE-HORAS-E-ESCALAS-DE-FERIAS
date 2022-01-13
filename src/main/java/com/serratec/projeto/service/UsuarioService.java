@@ -45,9 +45,6 @@ public class UsuarioService {
 	@Autowired
 	PasswordEncoder encoder;
 
-	@Autowired
-	private FotoService fotoService;
-
 	/**
 	 * MÉTODO PARA CRIAR UM NOVO USUÁRIO
 	 * 
