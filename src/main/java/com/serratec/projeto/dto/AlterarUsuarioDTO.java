@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import com.serratec.projeto.model.Nivel;
-import com.serratec.projeto.model.Equipe;
+
 
 public class AlterarUsuarioDTO implements Serializable {
 	/**
