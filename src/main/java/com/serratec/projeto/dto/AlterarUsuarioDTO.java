@@ -14,7 +14,7 @@ public class AlterarUsuarioDTO implements Serializable {
 
 	private Nivel nivel;
 	private String email;
-	private Equipe equipe;
+	private Long equipe;
 	private String nome;
 	private String password;
 	private LocalDate dataPodeIniciarferias;
@@ -54,11 +54,11 @@ public class AlterarUsuarioDTO implements Serializable {
 		this.email = email;
 	}
 
-	public Equipe getEquipe() {
+	public Long getEquipe() {
 		return equipe;
 	}
 
-	public void setEquipe(Equipe equipe) {
+	public void setEquipe(Long equipe) {
 		this.equipe = equipe;
 	}
 

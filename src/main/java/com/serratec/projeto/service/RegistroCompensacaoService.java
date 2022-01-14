@@ -45,7 +45,8 @@ public class RegistroCompensacaoService {
 		registro.setUsuario(usuarioRepository.getById(request.getIdUsuario()));
 		registro.setHoraInicio(request.getHrInicioCompensacao());
 		registro.setHoraTermino(request.getHrTerminoCompensacao());
-		long minTotais = Duration.between(request.getHrInicioCompensacao(), request.getHrTerminoCompensacao()).toMinutes();
+		long minTotais = Duration.between(request.getHrInicioCompensacao(), request.getHrTerminoCompensacao())
+				.toMinutes();
 		registro.setHoraTotal(minTotais);
 		registro.setData(request.getDataCompensacao());
 		System.out.println(registro.toString());
@@ -63,11 +64,11 @@ public class RegistroCompensacaoService {
 		return repository.findAll();
 
 	}
-	
-	public ResponseEntity<List<RegistroCompensacao>> listarRegUsuario(Long id) throws RecursoNotFoundException{
-		if(!usuarioRepository.existsById(id))
+
+	public ResponseEntity<List<RegistroCompensacao>> listarRegUsuario(Long id) throws RecursoNotFoundException {
+		if (!usuarioRepository.existsById(id))
 			throw new RecursoNotFoundException("Usuário não encontrado");
-		
+
 		List<RegistroCompensacao> listR = repository.findAll();
 		listR = listR.stream().filter((u) -> u.getUsuario().getIdUsuario() == id).collect(Collectors.toList());
 		return ResponseEntity.ok(listR);
@@ -88,7 +89,6 @@ public class RegistroCompensacaoService {
 			throw new RecursoNotFoundException("Registro Compensação não encontrado");
 		}
 
-//		return ResponseEntity.notFound().build();
 	}
 
 	/**

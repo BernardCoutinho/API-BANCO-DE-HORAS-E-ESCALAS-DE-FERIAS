@@ -35,10 +35,10 @@ public class UsuarioService {
 
 	@Autowired
 	private BancoHorasService bhService;
-	
+
 	@Autowired
 	private BancoHorasRepository bhRepository;
-	
+
 	@Autowired
 	MailConfig mailConfig;
 
@@ -79,11 +79,11 @@ public class UsuarioService {
 		usuarioRepository.save(usuario);
 		CriarBancoHorasDTO bancoDTO = new CriarBancoHorasDTO(usuario.getIdUsuario(), saldo);
 		bhService.criarBancoHoras(bancoDTO);
-		
+
 		String texto = "Usuario cadastrado com sucesso!\nSeu Login: %s \nSua Senha: %s\nAo acessar pela primeira vez mude a sua senha!\nAcesse pelo Link para mudar: %s";
 		texto = String.format(texto, usuario.getEmail(), usuario.getPassword(), "LinkDaPag");
 		mailConfig.enviarEmail(criarUsuarioDTO.getEmail(), "Cadastro de Usuário Concluído", texto);
-		
+
 		return new UsuarioDTO(usuario);
 
 	}
@@ -104,8 +104,8 @@ public class UsuarioService {
 		usuarioDto.setDataPodeIniciarFerias(usuario.getDataPodeIniciarFerias());
 		usuarioDto.setDataDeveIniciarFerias(usuario.getDataDeveIniciarFerias());
 		usuarioDto.setDataVencimento(usuario.getDataVencimento());
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-				.path("/projeto-alter/usuarios/{id}/foto").buildAndExpand(usuario.getIdUsuario()).toUri();
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
+				.buildAndExpand(usuario.getIdUsuario()).toUri();
 		usuarioDto.setUri(uri.toString());
 
 		return usuarioDto;
@@ -175,25 +175,32 @@ public class UsuarioService {
 			Usuario usuario = new Usuario(alterarUsuarioDTO);
 			usuario.setIdUsuario(id);
 			usuario.setNome(alterarUsuarioDTO.getNome());
-			usuario.setPassword(alterarUsuarioDTO.getPassword());
+			usuario.setPassword(encoder.encode(alterarUsuarioDTO.getPassword()));
 			usuario.setEmail(alterarUsuarioDTO.getEmail());
 			usuario.setNivel(alterarUsuarioDTO.getNivel());
-			usuario.setEquipe(alterarUsuarioDTO.getEquipe());
+			usuario.setEquipe(equipeRepository.getById(alterarUsuarioDTO.getEquipe()));
 			usuario.setDataContratacao(alterarUsuarioDTO.getDataContratacao());
 			usuario.setDataPodeIniciarFerias(alterarUsuarioDTO.getDataPodeIniciarferias());
 			usuario.setDataDeveIniciarFerias(alterarUsuarioDTO.getDataDeveIniciarferias());
 			usuario.setDataVencimento(alterarUsuarioDTO.getDataVencimento());
 			String texto = "Usuario alterado com sucesso!\nSeu Login: %s \nSua Senha: %s";
-			texto = String.format(texto, usuario.getEmail(), usuario.getPassword()); 
+			texto = String.format(texto, usuario.getEmail(), usuario.getPassword());
 			adicionarUriFoto(usuario);
-			mailConfig.enviarEmail(usuario.getEmail(), "Alteração de Usuário Concluída",
-			 texto);
+			mailConfig.enviarEmail(usuario.getEmail(), "Alteração de Usuário Concluída", texto);
 
 			usuarioRepository.save(usuario);
 			return new UsuarioDTO(usuario);
 		}
 		throw new RecursoNotFoundException("Usuario não encontrado");
 	}
+
+	/**
+	 * MÉTODO PARA DESCONTAR AS FÉRIAS DO USUÁRIO
+	 * 
+	 * @param usuario
+	 * @param numDias
+	 * @return
+	 */
 
 	public UsuarioDTO DescontarFerias(Usuario usuario, int numDias) {
 		Usuario user = usuario;
@@ -202,25 +209,31 @@ public class UsuarioService {
 		return new UsuarioDTO(user);
 	}
 
+	/**
+	 * MÉTODO PARA ACRESCENTAR AS FÉRIAS DO USUÁRIO
+	 */
+
 	public UsuarioDTO acrescentarFerias(Long id, int numDias) {
 		Usuario user = usuarioRepository.getById(id);
 		user.setQtdDiasFerias(user.getQtdDiasFerias() + numDias);
 		usuarioRepository.save(user);
 		return new UsuarioDTO(user);
 	}
-	
+
+	/**
+	 * MÉTODO PARA RESETAR A QUANTIDADE DE FÉRIAS E ALTERAR AS DATAS DO USUÁRIO
+	 */
+
 	public void resetarQuantidadeFeriasEAlterarDatas() {
 		List<Usuario> listUser = usuarioRepository.findAll();
 		LocalDate diaAtual = LocalDate.now();
-		listUser.stream()
-		.filter((e) -> e.getDataVencimento().getDayOfYear() == diaAtual.getDayOfYear())
-		.forEach(e -> {
-				Usuario user = e;
-				user.setQtdDiasFerias(30);
-				user.setDataPodeIniciarFerias(user.getDataPodeIniciarFerias().plusYears(1));
-				user.setDataDeveIniciarFerias(user.getDataDeveIniciarFerias().plusYears(1));
-				user.setDataVencimento(user.getDataVencimento().plusYears(1));
-				usuarioRepository.save(user);	
+		listUser.stream().filter((e) -> e.getDataVencimento().getDayOfYear() == diaAtual.getDayOfYear()).forEach(e -> {
+			Usuario user = e;
+			user.setQtdDiasFerias(30);
+			user.setDataPodeIniciarFerias(user.getDataPodeIniciarFerias().plusYears(1));
+			user.setDataDeveIniciarFerias(user.getDataDeveIniciarFerias().plusYears(1));
+			user.setDataVencimento(user.getDataVencimento().plusYears(1));
+			usuarioRepository.save(user);
 		});
 	}
 

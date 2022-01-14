@@ -5,6 +5,9 @@ import java.time.LocalDate;
 
 public class AlterarApontamentoFeriasDTO implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 8104767388433616676L;
 
 	private LocalDate diaFolga;
@@ -25,4 +28,5 @@ public class AlterarApontamentoFeriasDTO implements Serializable {
 	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
+
 }

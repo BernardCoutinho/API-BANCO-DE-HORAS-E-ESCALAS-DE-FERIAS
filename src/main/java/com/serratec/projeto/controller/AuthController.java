@@ -37,10 +37,10 @@ public class AuthController {
 
 	@Autowired
 	UsuarioRepository repository;
-	
+
 	@Autowired
 	UsuarioService userService;
-	
+
 	@Autowired
 	EquipeRepository equipeRepository;
 
@@ -52,11 +52,11 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		System.out.println(loginRequest.getUsername());
+		System.out.println(loginRequest.getEmail());
 		System.out.println(loginRequest.getPassword());
 
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
@@ -65,22 +65,17 @@ public class AuthController {
 		userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 
 		return ResponseEntity
-				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail()));
+				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail()));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody CriarUsuarioDTO request) {
-		if (repository.existsByUsername(request.getUsername())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Erro: Usuário já existe !"));
-		}
-
 		if (repository.existsByEmail(request.getEmail())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Erro: Email já está sendo usado!"));
 		}
 
 		// Create new user's account
 		userService.criarUsuario(request);
-	
 
 		return ResponseEntity.ok(new MessageResponse("Usuário registrado com sucesso!"));
 	}

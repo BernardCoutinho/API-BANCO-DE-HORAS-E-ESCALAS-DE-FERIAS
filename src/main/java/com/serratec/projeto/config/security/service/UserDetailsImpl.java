@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Long id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
@@ -37,9 +37,9 @@ public class UserDetailsImpl implements UserDetails {
 
 	public static UserDetailsImpl build(Usuario user) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		 authorities.add(new SimpleGrantedAuthority("role"));
-		return new UserDetailsImpl(user.getEmail(), user.getPassword(),  authorities);
-				
+		authorities.add(new SimpleGrantedAuthority("role"));
+		return new UserDetailsImpl(user.getEmail(), user.getPassword(), authorities);
+
 //				UserDetailsImpl(
 //				user.getIdUsuario(),
 //				user.getNome(),
@@ -48,7 +48,6 @@ public class UserDetailsImpl implements UserDetails {
 //				user.getPassword(),
 //				authorities);
 	}
-	
 
 	public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super();

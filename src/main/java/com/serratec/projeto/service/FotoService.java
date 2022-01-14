@@ -15,12 +15,21 @@ import com.serratec.projeto.repository.UsuarioRepository;
 
 @Service
 public class FotoService {
-	
+
 	@Autowired
 	private FotoRepository fotoRepository;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	/**
+	 * MÉTODO PARA INSERIR UMA FOTO DE UM USUÁRIO
+	 * 
+	 * @param id
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 
 	public Foto inserir(Long id, MultipartFile file) throws IOException {
 		Foto foto = new Foto();
@@ -32,7 +41,14 @@ public class FotoService {
 
 		return fotoRepository.save(foto);
 	}
-	
+
+	/**
+	 * MÉTODO PARA OBTER UMA FOTO POR ID
+	 * 
+	 * @param id
+	 * @return
+	 * @throws RecursoNotFoundException
+	 */
 
 	public Foto obterPorId(Long id) throws RecursoNotFoundException {
 		Optional<Foto> foto = fotoRepository.findById(id);
@@ -42,13 +58,18 @@ public class FotoService {
 		} else {
 			throw new RecursoNotFoundException("Foto de usuario não encontrada");
 		}
-//		return null;
+
 	}
-	
+
+	/**
+	 * MÉTODO PARA DELETAR UMA FOTO POR ID
+	 * 
+	 * @param id
+	 */
+
 	public void deletarPorId(Long id) {
 		if (fotoRepository.existsById(id)) {
 			fotoRepository.deleteById(id);
 		}
 	}
 }
-

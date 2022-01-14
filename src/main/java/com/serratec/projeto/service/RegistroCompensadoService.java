@@ -60,10 +60,11 @@ public class RegistroCompensadoService {
 		return repository.findAll();
 
 	}
-	public ResponseEntity<List<RegistroCompensado>> listarRegUsuario(Long id) throws RecursoNotFoundException{
-		if(!usuarioRepository.existsById(id))
+
+	public ResponseEntity<List<RegistroCompensado>> listarRegUsuario(Long id) throws RecursoNotFoundException {
+		if (!usuarioRepository.existsById(id))
 			throw new RecursoNotFoundException("Usuário não encontrado");
-		
+
 		List<RegistroCompensado> listR = repository.findAll();
 		listR = listR.stream().filter((u) -> u.getUsuario().getIdUsuario() == id).collect(Collectors.toList());
 		return ResponseEntity.ok(listR);

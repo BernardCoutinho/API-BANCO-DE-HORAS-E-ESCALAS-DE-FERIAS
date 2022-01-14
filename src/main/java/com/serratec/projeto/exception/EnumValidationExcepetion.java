@@ -1,7 +1,7 @@
 package com.serratec.projeto.exception;
 
 public class EnumValidationExcepetion extends Exception {
-	
+
 	/**
 	 * 
 	 */
@@ -9,7 +9,7 @@ public class EnumValidationExcepetion extends Exception {
 
 	public EnumValidationExcepetion(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub   
+
 	}
 
 }

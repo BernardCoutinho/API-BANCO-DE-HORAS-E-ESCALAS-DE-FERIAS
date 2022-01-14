@@ -85,8 +85,7 @@ public class UsuarioController {
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 500, message = "Erro de servidor") })
-	public ResponseEntity<Object> inserirFoto(@PathVariable Long id,
-			@RequestParam("file") MultipartFile file) {
+	public ResponseEntity<Object> inserirFoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
 		try {
 			return ResponseEntity.ok(fotoService.inserir(id, file));
 		} catch (Exception e) {

@@ -60,10 +60,11 @@ public class RegistroCompensacaoController {
 	public List<RegistroCompensacao> listar() {
 		return service.listar();
 	}
-	
+
 	@GetMapping("/usuario/{id}")
 	@ApiOperation(value = "Listar registros compensações de um usuário", notes = "Lista os registros de compensações de um usuário")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna uma lista de registros compensações do usuário"),
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna uma lista de registros compensações do usuário"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),

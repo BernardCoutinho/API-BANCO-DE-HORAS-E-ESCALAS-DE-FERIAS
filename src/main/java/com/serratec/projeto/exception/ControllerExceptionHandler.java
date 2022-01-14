@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
-
-@ControllerAdvice 
+@ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
@@ -40,4 +38,3 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 }
-

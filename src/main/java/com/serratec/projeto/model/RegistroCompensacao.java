@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.serratec.projeto.dto.AlterarRegistroCompensacaoDTO;
 
@@ -88,10 +87,6 @@ public class RegistroCompensacao {
 		return horaTotal;
 	}
 
-
-
-
-
 	public void setHoraTotal(Long horaTotal) {
 		this.horaTotal = horaTotal;
 	}
@@ -113,6 +108,6 @@ public class RegistroCompensacao {
 	}
 
 	public RegistroCompensacao(AlterarRegistroCompensacaoDTO alterarRegistroCompensacaoDTO) {
-		
+
 	}
 }

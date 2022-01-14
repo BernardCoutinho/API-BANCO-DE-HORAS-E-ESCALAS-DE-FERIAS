@@ -60,6 +60,5 @@ public class CriarRegistroCompensadoDTO implements Serializable {
 	public void setHrTerminoCompensado(LocalTime hrTerminoCompensado) {
 		this.hrTerminoCompensado = hrTerminoCompensado;
 	}
-	
 
 }

@@ -51,7 +51,7 @@ public class CriarApontamentoFeriasDTO implements Serializable {
 		this.diaFolga = diaFolga;
 		this.nome = nome;
 	}
-	
+
 	public CriarApontamentoFeriasDTO(ApontamentoFerias aponta) {
 		super();
 		this.id_usuario = aponta.getUsuario().getIdUsuario();

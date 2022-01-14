@@ -34,7 +34,6 @@ public class CriarUsuarioDTO implements Serializable {
 
 	private LocalDate dataContratacao;
 
-
 	@NotBlank
 	private String password;
 
