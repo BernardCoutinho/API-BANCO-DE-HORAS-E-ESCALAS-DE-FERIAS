@@ -104,9 +104,9 @@ public class UsuarioService {
 		usuarioDto.setDataPodeIniciarFerias(usuario.getDataPodeIniciarFerias());
 		usuarioDto.setDataDeveIniciarFerias(usuario.getDataDeveIniciarFerias());
 		usuarioDto.setDataVencimento(usuario.getDataVencimento());
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
-				.buildAndExpand(usuario.getIdUsuario()).toUri();
-		usuarioDto.setUri(uri.toString());
+//		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
+//				.buildAndExpand(usuario.getIdUsuario()).toUri();
+//		usuarioDto.setUri(uri.toString());
 
 		return usuarioDto;
 	}
@@ -124,7 +124,6 @@ public class UsuarioService {
 		for (Usuario usuario : usuarios) {
 			UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
 			usuariosDTO.add(usuarioDTO);
-			usuariosDTO.add(adicionarUriFoto(usuario));
 		}
 
 		return usuariosDTO;

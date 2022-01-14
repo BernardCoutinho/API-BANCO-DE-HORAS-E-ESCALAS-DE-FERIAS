@@ -24,7 +24,7 @@ public class UsuarioDTO implements Serializable {
 	private LocalDate dataPodeIniciarFerias;
 	private LocalDate dataDeveIniciarFerias;
 	private String username;
-	private String uri;
+	
 
 	public UsuarioDTO() {
 		super();
@@ -123,13 +123,4 @@ public class UsuarioDTO implements Serializable {
 	public void setDataDeveIniciarFerias(LocalDate dataDeveIniciarFerias) {
 
 	}
-
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
 }
