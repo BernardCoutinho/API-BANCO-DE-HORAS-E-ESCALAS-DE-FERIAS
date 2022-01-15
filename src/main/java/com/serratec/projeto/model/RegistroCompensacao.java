@@ -27,7 +27,7 @@ public class RegistroCompensacao {
 	@Column(name = "id_registro_compensacao")
 	private Long idRegCompensacao;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
