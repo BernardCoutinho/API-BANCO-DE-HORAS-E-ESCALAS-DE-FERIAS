@@ -92,26 +92,7 @@ public class UsuarioService {
 	/**
 	 * MÉTODO PARA INSERIR FOTO
 	 */
-	private UsuarioDTO adicionarUriFoto(Usuario usuario) {
-
-		UsuarioDTO usuarioDto = new UsuarioDTO();
-		usuarioDto.setIdUsuario(usuario.getIdUsuario());
-		usuarioDto.setNome(usuario.getNome());
-		usuarioDto.setUsername(usuario.getUsername());
-		usuarioDto.setEmail(usuario.getEmail());
-		usuarioDto.setNivel(usuario.getNivel());
-		usuarioDto.setEquipe(usuario.getEquipe());
-		usuarioDto.setDataContratacao(usuario.getDataContratacao());
-		usuarioDto.setDataPodeIniciarFerias(usuario.getDataPodeIniciarFerias());
-		usuarioDto.setDataDeveIniciarFerias(usuario.getDataDeveIniciarFerias());
-		usuarioDto.setDataVencimento(usuario.getDataVencimento());
-		usuarioDto.setFotoBase64(usuario.getFotoBase64());
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
-				.buildAndExpand(usuario.getIdUsuario()).toUri();
-		usuarioDto.setUri(uri.toString());
-
-		return usuarioDto;
-	}
+	
 
 	/**
 	 * MÉTODO PARA LISTAR TODOS OS USUARIOS
@@ -139,9 +120,9 @@ public class UsuarioService {
 	 */
 
 	public UsuarioDTO buscar(Long id) throws RecursoNotFoundException {
-		Optional<Usuario> usuario = usuarioRepository.findById(id);
-		if (usuario.isPresent()) {
-			return adicionarUriFoto(usuario.get());
+		Usuario usuario = usuarioRepository.getById(id);
+		if (usuario != null) {
+			return  new UsuarioDTO(usuario);
 		} else {
 			throw new RecursoNotFoundException("Usuario não encontrado");
 		}
@@ -187,7 +168,6 @@ public class UsuarioService {
 			usuario.setFotoBase64(alterarUsuarioDTO.getFotoBase64());
 			String texto = "Usuario alterado com sucesso!\nSeu Login: %s \nSua Senha: %s";
 			texto = String.format(texto, usuario.getEmail(), usuario.getPassword());
-			adicionarUriFoto(usuario);
 			mailConfig.enviarEmail(usuario.getEmail(), "Alteração de Usuário Concluída", texto);
 
 			usuarioRepository.save(usuario);
