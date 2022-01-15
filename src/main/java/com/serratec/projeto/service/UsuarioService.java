@@ -67,7 +67,7 @@ public class UsuarioService {
 		Long saldo = (long) 0;
 		usuario.setNome(criarUsuarioDTO.getNome());
 		usuario.setUsername(criarUsuarioDTO.getUsername());
-		usuario.setEquipe(equipeRepository.findById(criarUsuarioDTO.getIdEquipe()).get());
+		usuario.setEquipe(equipeRepository.getById(criarUsuarioDTO.getIdEquipe()));
 		usuario.setNivel(criarUsuarioDTO.getNivel());
 		usuario.setDataContratacao(criarUsuarioDTO.getDataContratacao());
 		usuario.setDataPodeIniciarFerias(criarUsuarioDTO.getDataContratacao().plusYears(1));
