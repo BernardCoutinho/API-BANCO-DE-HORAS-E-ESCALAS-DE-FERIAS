@@ -99,7 +99,7 @@ public class RegistroCompensadoController {
 		return service.alterar(id, response);
 	}
 
-	@DeleteMapping("/id")
+	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Deletar um registro compensado", notes = "Deleta um registro compensado")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Exclui um registro compensado"),
 			@ApiResponse(code = 204, message = "Exclui um registro compensado e retorna vazio"),
