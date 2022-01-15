@@ -24,7 +24,16 @@ public class UsuarioDTO implements Serializable {
 	private LocalDate dataPodeIniciarFerias;
 	private LocalDate dataDeveIniciarFerias;
 	private String username;
-	
+	private String uri;
+	private String fotoBase64;
+
+	public String getFotoBase64() {
+		return fotoBase64;
+	}
+
+	public void setFotoBase64(String fotoBase64) {
+		this.fotoBase64 = fotoBase64;
+	}
 
 	public UsuarioDTO() {
 		super();
@@ -42,6 +51,7 @@ public class UsuarioDTO implements Serializable {
 		this.dataPodeIniciarFerias = usuario.getDataPodeIniciarFerias();
 		this.dataDeveIniciarFerias = usuario.getDataDeveIniciarFerias();
 		this.username = usuario.getUsername();
+		this.fotoBase64 = usuario.getFotoBase64();
 	}
 
 	public String getUsername() {
@@ -123,4 +133,13 @@ public class UsuarioDTO implements Serializable {
 	public void setDataDeveIniciarFerias(LocalDate dataDeveIniciarFerias) {
 
 	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
 }

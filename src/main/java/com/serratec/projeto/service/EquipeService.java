@@ -161,6 +161,7 @@ public class EquipeService {
 				userDTO.setNome(user.getNome());
 				userDTO.setEquipe(user.getEquipe());
 				userDTO.setIdUsuario(user.getIdUsuario());
+				userDTO.setFotoBase64(user.getFotoBase64());
 				listaDTO.add(userDTO);
 			}
 		}

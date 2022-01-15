@@ -75,6 +75,7 @@ public class UsuarioService {
 		usuario.setDataVencimento(criarUsuarioDTO.getDataContratacao().plusYears(2));
 		usuario.setEmail(criarUsuarioDTO.getEmail());
 		usuario.setQtdDiasFerias(30);
+		usuario.setFotoBase64(criarUsuarioDTO.getFotoBase64());
 		usuario.setPassword(encoder.encode(criarUsuarioDTO.getPassword()));
 		usuarioRepository.save(usuario);
 		CriarBancoHorasDTO bancoDTO = new CriarBancoHorasDTO(usuario.getIdUsuario(), saldo);
@@ -104,9 +105,10 @@ public class UsuarioService {
 		usuarioDto.setDataPodeIniciarFerias(usuario.getDataPodeIniciarFerias());
 		usuarioDto.setDataDeveIniciarFerias(usuario.getDataDeveIniciarFerias());
 		usuarioDto.setDataVencimento(usuario.getDataVencimento());
-//		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
-//				.buildAndExpand(usuario.getIdUsuario()).toUri();
-//		usuarioDto.setUri(uri.toString());
+		usuarioDto.setFotoBase64(usuario.getFotoBase64());
+		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/projeto-alter/usuarios/{id}/foto")
+				.buildAndExpand(usuario.getIdUsuario()).toUri();
+		usuarioDto.setUri(uri.toString());
 
 		return usuarioDto;
 	}
@@ -182,6 +184,7 @@ public class UsuarioService {
 			usuario.setDataPodeIniciarFerias(alterarUsuarioDTO.getDataPodeIniciarferias());
 			usuario.setDataDeveIniciarFerias(alterarUsuarioDTO.getDataDeveIniciarferias());
 			usuario.setDataVencimento(alterarUsuarioDTO.getDataVencimento());
+			usuario.setFotoBase64(alterarUsuarioDTO.getFotoBase64());
 			String texto = "Usuario alterado com sucesso!\nSeu Login: %s \nSua Senha: %s";
 			texto = String.format(texto, usuario.getEmail(), usuario.getPassword());
 			adicionarUriFoto(usuario);
