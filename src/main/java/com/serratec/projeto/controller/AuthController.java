@@ -1,5 +1,6 @@
 package com.serratec.projeto.controller;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ import com.serratec.projeto.dto.CriarUsuarioDTO;
 import com.serratec.projeto.dto.JwtResponse;
 import com.serratec.projeto.dto.LoginRequest;
 import com.serratec.projeto.dto.MessageResponse;
-import com.serratec.projeto.repository.EquipeRepository;
+import com.serratec.projeto.model.Usuario;
 import com.serratec.projeto.repository.UsuarioRepository;
 import com.serratec.projeto.service.UsuarioService;
 
@@ -40,9 +41,6 @@ public class AuthController {
 
 	@Autowired
 	UsuarioService userService;
-
-	@Autowired
-	EquipeRepository equipeRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -62,10 +60,12 @@ public class AuthController {
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
+		userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());	
+		Optional<Usuario> user = repository.findByEmail(loginRequest.getEmail());
+		userDetails.setId(user.get().getIdUsuario());
+		userDetails.setEmail(user.get().getEmail());
 		return ResponseEntity
-				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail()));
+				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), user.get().getFotoBase64()));
 	}
 
 	@PostMapping("/signup")

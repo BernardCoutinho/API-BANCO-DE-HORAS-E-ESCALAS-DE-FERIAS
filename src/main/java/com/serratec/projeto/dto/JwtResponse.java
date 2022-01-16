@@ -5,12 +5,28 @@ public class JwtResponse {
 	private String type = "Bearer";
 	private Long id;
 	private String email;
+	private String foto;
 
-	public JwtResponse(String accessToken, Long id, String email) {
+	public JwtResponse(String accessToken, Long id, String email, String foto) {
 		this.token = accessToken;
 		this.id = id;
 		this.email = email;
+		this.foto = foto;
 	}
+	
+	
+
+	public String getFoto() {
+		return foto;
+	}
+
+
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+
 
 	public String getAccessToken() {
 		return token;
