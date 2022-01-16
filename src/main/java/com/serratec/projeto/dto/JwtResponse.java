@@ -1,20 +1,51 @@
 package com.serratec.projeto.dto;
 
+import com.serratec.projeto.model.Nivel;
+
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
 	private Long id;
 	private String email;
 	private String foto;
+	private String nome;
+	private Nivel nivel;
 
-	public JwtResponse(String accessToken, Long id, String email, String foto) {
+	public JwtResponse(String accessToken, Long id, String email, String foto, String nome, Nivel nivel) {
 		this.token = accessToken;
 		this.id = id;
 		this.email = email;
 		this.foto = foto;
+		this.nome = nome;
+		this.nivel = nivel;
+		
 	}
 	
 	
+
+	public String getNome() {
+		return nome;
+	}
+
+
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+
+
+	public Nivel getNivel() {
+		return nivel;
+	}
+
+
+
+	public void setNivel(Nivel nivel) {
+		this.nivel = nivel;
+	}
+
+
 
 	public String getFoto() {
 		return foto;
