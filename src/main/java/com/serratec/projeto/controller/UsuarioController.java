@@ -105,9 +105,9 @@ public class UsuarioController {
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 500, message = "Erro de servidor") })
-	public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long id) {
-		Optional<Usuario> UsuarioDTO = usuarioRepository.findById(id);
-		if (!UsuarioDTO.isPresent()) {
+	public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
+		Optional<Usuario> usuario = usuarioRepository.findById(id);
+		if (!usuario.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(service.buscar(id));

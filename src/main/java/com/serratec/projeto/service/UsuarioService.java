@@ -116,10 +116,10 @@ public class UsuarioService {
 	 * @return
 	 */
 
-	public UsuarioDTO buscar(Long id) throws RecursoNotFoundException {
+	public Usuario buscar(Long id) throws RecursoNotFoundException {
 		Usuario usuario = usuarioRepository.getById(id);
 		if (usuario != null) {
-			return  new UsuarioDTO(usuario);
+			return  usuario;
 		} else {
 			throw new RecursoNotFoundException("Usuario não encontrado");
 		}
