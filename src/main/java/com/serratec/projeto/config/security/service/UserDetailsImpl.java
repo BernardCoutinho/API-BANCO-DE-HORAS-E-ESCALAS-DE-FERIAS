@@ -39,15 +39,9 @@ public class UserDetailsImpl implements UserDetails {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority("role"));
 		return new UserDetailsImpl(user.getEmail(), user.getPassword(), authorities);
-
-//				UserDetailsImpl(
-//				user.getIdUsuario(),
-//				user.getNome(),
-//				user.getEmail(),
-//				user.getUsername(),
-//				user.getPassword(),
-//				authorities);
 	}
+	
+	
 
 	public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super();
