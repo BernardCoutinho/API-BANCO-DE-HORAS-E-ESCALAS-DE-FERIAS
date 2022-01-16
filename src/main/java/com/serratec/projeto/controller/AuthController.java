@@ -64,9 +64,8 @@ public class AuthController {
 		Optional<Usuario> user = repository.findByEmail(loginRequest.getEmail());
 		userDetails.setId(user.get().getIdUsuario());
 		userDetails.setEmail(user.get().getEmail());
-		String lvl = user.get().getNivel().name();
 		return ResponseEntity
-				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), user.get().getFotoBase64(), user.get().getNome(), lvl));
+				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), user.get().getFotoBase64(), user.get().getNome(), user.get().getNivel().name()));
 	}
 
 	@PostMapping("/signup")
