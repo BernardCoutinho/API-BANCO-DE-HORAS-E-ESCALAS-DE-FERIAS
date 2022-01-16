@@ -9,9 +9,9 @@ public class JwtResponse {
 	private String email;
 	private String foto;
 	private String nome;
-	private Nivel nivel;
+	private String nivel;
 
-	public JwtResponse(String accessToken, Long id, String email, String foto, String nome, Nivel nivel) {
+	public JwtResponse(String accessToken, Long id, String email, String foto, String nome, String nivel) {
 		this.token = accessToken;
 		this.id = id;
 		this.email = email;
@@ -35,13 +35,13 @@ public class JwtResponse {
 
 
 
-	public Nivel getNivel() {
+	public String getNivel() {
 		return nivel;
 	}
 
 
 
-	public void setNivel(Nivel nivel) {
+	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
 
