@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.serratec.projeto.dto.AlterarRegistroCompensacaoDTO;
 import com.serratec.projeto.dto.CriarRegistroCompensacaoDTO;
@@ -40,7 +39,7 @@ public class RegistroCompensacaoService {
 	 * @return RETORNA UM REGISTRO COMPENSAÇÃO
 	 */
 
-	public RegistroCompensacao criarRegistroCompensacao(@RequestBody CriarRegistroCompensacaoDTO request) {
+	public RegistroCompensacao criarRegistroCompensacao( CriarRegistroCompensacaoDTO request) {
 		RegistroCompensacao registro = new RegistroCompensacao();
 		registro.setUsuario(usuarioRepository.getById(request.getIdUsuario()));
 		registro.setHoraInicio(request.getHrInicioCompensacao());

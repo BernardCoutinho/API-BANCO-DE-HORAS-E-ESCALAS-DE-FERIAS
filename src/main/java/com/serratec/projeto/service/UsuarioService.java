@@ -1,13 +1,16 @@
 package com.serratec.projeto.service;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.serratec.projeto.config.MailConfig;
 import com.serratec.projeto.dto.AlterarUsuarioDTO;
@@ -87,11 +90,6 @@ public class UsuarioService {
 	}
 
 	/**
-	 * MÉTODO PARA INSERIR FOTO
-	 */
-	
-
-	/**
 	 * MÉTODO PARA LISTAR TODOS OS USUARIOS
 	 * 
 	 * @return UMA LISTA DE USUARIOS
@@ -119,7 +117,7 @@ public class UsuarioService {
 	public Usuario buscar(Long id) throws RecursoNotFoundException {
 		Usuario usuario = usuarioRepository.getById(id);
 		if (usuario != null) {
-			return  usuario;
+			return usuario;
 		} else {
 			throw new RecursoNotFoundException("Usuario não encontrado");
 		}

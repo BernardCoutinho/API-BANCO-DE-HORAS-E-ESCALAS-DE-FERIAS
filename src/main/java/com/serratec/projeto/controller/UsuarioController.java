@@ -50,7 +50,6 @@ public class UsuarioController {
 	@Autowired
 	UsuarioRepository usuarioRepository;
 
-	
 
 	@PostMapping
 	@ApiOperation(value = "Cadastrar um usuario", notes = "Cadastro de usuario")
@@ -98,7 +97,7 @@ public class UsuarioController {
 		return ResponseEntity.ok(apontamentoService.feriasDoUsuario(id));
 	}
 
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	@ApiOperation(value = "Buscar um usuario por id", notes = "Busca um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna um usuario"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
@@ -113,7 +112,7 @@ public class UsuarioController {
 		return ResponseEntity.ok(service.buscar(id));
 	}
 
-	@PutMapping("{id}")
+	@PutMapping("/{id}")
 	@ApiOperation(value = "Alterar usuario", notes = "Alteração de um usuario")
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Altera um usuario"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
@@ -130,7 +129,7 @@ public class UsuarioController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@DeleteMapping("{id}")
+	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Deletar um usuario", notes = "Deleta usuario")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Exclui um usuario"),
 			@ApiResponse(code = 204, message = "Exclui um usuario e retorna vazio"),
