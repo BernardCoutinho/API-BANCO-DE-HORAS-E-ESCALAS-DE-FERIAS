@@ -53,7 +53,7 @@ public class Usuario implements Serializable {
 	@Column
 	private String password;
 	
-	@Column(columnDefinition="text", length=10485760)
+	@Column(columnDefinition="text")
 	private String fotoBase64;
 
 	@Column(name = "data_contratacao")
