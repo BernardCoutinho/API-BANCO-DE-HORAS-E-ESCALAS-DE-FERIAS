@@ -1,6 +1,7 @@
 package com.serratec.projeto.controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.serratec.projeto.dto.AlterarApontamentoFeriasDTO;
 import com.serratec.projeto.dto.ApontamentoFeriasDTO;
-import com.serratec.projeto.dto.BuscarMembrosFolgaDiaDTO;
 import com.serratec.projeto.dto.CriarApontamentoFeriasDTO;
 import com.serratec.projeto.dto.CriarMarcarFolgaPorPeriodoDTO;
 import com.serratec.projeto.dto.UsuarioDTO;
@@ -91,16 +91,18 @@ public class ApontamentoFeriasController {
 
 	}
 
-	@GetMapping("/membros_equipe_folga_dia")
+	@GetMapping("/membros_equipe_folga_dia/{idEquipe}/{dia}")
 	@ApiOperation(value = "Buscar membros de uma equipe de folga no dia", notes = "Busca um membros de uma equipe de folga no dia")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna uma lista de membros de folga no dia"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
 			@ApiResponse(code = 500, message = "Erro de servidor") })
-	public ResponseEntity<List<UsuarioDTO>> listaMembrosDeFeriasNoDia(@RequestBody BuscarMembrosFolgaDiaDTO busca) {
-		LocalDate dia = busca.getDia();
-		Long equipe = busca.getId_equipe();
+	public ResponseEntity<List<UsuarioDTO>> listaMembrosDeFeriasNoDia(@PathVariable("idEquipe") Long idEquipe, @PathVariable("dia") String diaR) {
+		
+              
+		LocalDate dia = LocalDate.parse(diaR, DateTimeFormatter.ISO_DATE);
+		Long equipe = idEquipe;
 		return ResponseEntity.ok(service.listaUsuariosDaEquipeDeFolgaNoDia(dia, equipe));
 	}
 
