@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// -- swagger ui
 
 			"/v2/api-docs", "/webjars/**", "/v3/api-docs", "/swagger-resources/**", "/swagger-ui/**",
-			"/api/auth/signin", "/swagger-ui.html", "/equipes" };
+			"/api/auth/signin", "/swagger-ui.html", "/equipes", "/apontamento/**", "/apontamento/membros_equipe_folga_dia" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
