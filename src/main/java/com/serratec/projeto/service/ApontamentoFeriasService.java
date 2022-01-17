@@ -73,11 +73,11 @@ public class ApontamentoFeriasService {
 
 		DateTimeFormatter dt = DateTimeFormatter.ISO_DATE;
 		String texto, assunto;
-		assunto = String.format("Ferias Marcada: %s", dt.format(request.getDiaFolga()));
-		texto = String.format("O usuário %s da equipe %s marcou folga no dia %s", user.getNome(),
+		assunto = String.format("AlterStatus - Ferias Marcada: %s", dt.format(request.getDiaFolga()));
+		texto = String.format("O usuário %s da equipe %s marcou férias no dia %s", user.getNome(),
 				user.getEquipe().getNomeEquipe(), dt.format(request.getDiaFolga()));
 		mailConfig.enviarEmail(user.getEmail(), assunto, texto);
-
+		mailConfig.enviarEmail("bernard_coutinho2002@hotmail.com", assunto, texto);
 		return new CriarApontamentoFeriasDTO(apontamento);
 	}
 
@@ -144,10 +144,11 @@ public class ApontamentoFeriasService {
 		apontamentoFeriasRepository.deleteById(id);
 		DateTimeFormatter dt = DateTimeFormatter.ISO_DATE;
 		String texto, assunto;
-		assunto = String.format("Ferias Desmarcada: %s", dt.format(apontamento.getDiaFolga()));
+		assunto = String.format("AlterStatus - Ferias Desmarcada: %s", dt.format(apontamento.getDiaFolga()));
 		texto = String.format("O usuário %s da equipe %s desmarcou folga no dia $s", apontamento.getUsuario().getNome(),
 				apontamento.getUsuario().getEquipe().getNomeEquipe(), dt.format(apontamento.getDiaFolga()));
 		mailConfig.enviarEmail(apontamento.getUsuario().getEmail(), assunto, texto);
+		mailConfig.enviarEmail("bernard_coutinho2002@hotmail.com", assunto, texto);
 		return ResponseEntity.noContent().build();
 	}
 
@@ -313,7 +314,7 @@ public class ApontamentoFeriasService {
 				}
 			}
 			if (userRequest.getNivel() == Nivel.SENIOR) {
-				if (senior >= 2 && quantMembros <= 12) {
+				if (senior >= 1 && quantMembros <= 12) {
 					response = String.format(
 							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time pequeno já foi alcançado (2)!",
 							df.format(dia));

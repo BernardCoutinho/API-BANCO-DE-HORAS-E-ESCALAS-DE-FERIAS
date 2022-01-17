@@ -59,7 +59,7 @@ public class UsuarioService {
 		if (usuarioRepository.findByEmail(criarUsuarioDTO.getEmail()).isPresent()) {
 			throw new RecursoBadRequestException("Email já cadastrado!");
 		}
-
+		String senhaUnd = criarUsuarioDTO.getPassword();
 		Usuario usuario = new Usuario();
 		Long saldo = (long) 0;
 		usuario.setNome(criarUsuarioDTO.getNome());
@@ -79,8 +79,8 @@ public class UsuarioService {
 		bhService.criarBancoHoras(bancoDTO);
 
 		String texto = "Usuario cadastrado com sucesso!\nSeu Login: %s \nSua Senha: %s\nAo acessar pela primeira vez mude a sua senha!\nAcesse pelo Link para mudar: %s";
-		texto = String.format(texto, usuario.getEmail(), usuario.getPassword(), "LinkDaPag");
-		mailConfig.enviarEmail(criarUsuarioDTO.getEmail(), "Cadastro de Usuário Concluído", texto);
+		texto = String.format(texto, usuario.getEmail(), senhaUnd, "http://localhost:3000/alterar-senha");
+		mailConfig.enviarEmail(criarUsuarioDTO.getEmail(), "AlterStatus - Cadastro de Usuário Concluído", texto);
 
 		return new UsuarioDTO(usuario);
 

@@ -224,6 +224,8 @@ public class BancoHorasService {
 			bh.setUsuario(zbh.getUsuario());
 			bh.setId_banco(zbh.getId_banco());
 			bhRepository.save(bh);
+			String texto = "Seu banco de horas foi zerado";
+			mailConfig.enviarEmail(bh.getUsuario().getEmail(), "AlterStatus - Banco de horas", texto);
 		}
 	}
 
@@ -233,7 +235,7 @@ public class BancoHorasService {
 
 	public void enviaEmails() {
 		String texto;
-		String assunto = "Seu Banco de horas";
+		String assunto = "AlterStatus - Seu Banco de horas";
 		List<BancoHoras> listbh = bhRepository.findAll();
 
 		for (BancoHoras bh : listbh) {
