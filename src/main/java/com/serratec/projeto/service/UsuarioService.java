@@ -170,6 +170,18 @@ public class UsuarioService {
 		}
 		throw new RecursoNotFoundException("Usuario não encontrado");
 	}
+	
+	public UsuarioDTO alterarSenha(Long id, String senha) {
+			
+		if (usuarioRepository.existsById(id)) {
+			Usuario user = usuarioRepository.getById(id);
+			user.setPassword(encoder.encode(senha));
+			usuarioRepository.save(user);
+			return new UsuarioDTO(user);
+		}
+		throw new RecursoNotFoundException("Usuario não encontrado");
+	}
+
 
 	/**
 	 * MÉTODO PARA DESCONTAR AS FÉRIAS DO USUÁRIO

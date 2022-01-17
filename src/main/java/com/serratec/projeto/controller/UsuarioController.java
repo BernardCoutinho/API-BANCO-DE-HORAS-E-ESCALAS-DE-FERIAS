@@ -128,6 +128,24 @@ public class UsuarioController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+	
+	@PutMapping("/alterar-senha/{id}")
+	@ApiOperation(value = "Alterar usuario", notes = "Alteração de um usuario")
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Altera um usuario"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Recurso proibido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro de servidor") })
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<UsuarioDTO> alterarSenha(@PathVariable Long id,
+			@Valid @RequestBody String senha) throws RecursoBadRequestException {
+
+		if (usuarioRepository.existsById(id)) {
+			
+			return ResponseEntity.ok(service.alterarSenha(id, senha));
+		}
+		return ResponseEntity.notFound().build();
+	}
 
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Deletar um usuario", notes = "Deleta usuario")

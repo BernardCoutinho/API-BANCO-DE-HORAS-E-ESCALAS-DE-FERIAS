@@ -1,6 +1,6 @@
 package com.serratec.projeto.dto;
 
-import com.serratec.projeto.model.Nivel;
+
 
 public class JwtResponse {
 	private String token;
