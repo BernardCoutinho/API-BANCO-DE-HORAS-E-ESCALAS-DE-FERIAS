@@ -145,7 +145,7 @@ public class ApontamentoFeriasService {
 		DateTimeFormatter dt = DateTimeFormatter.ISO_DATE;
 		String texto, assunto;
 		assunto = String.format("AlterStatus - Ferias Desmarcada: %s", dt.format(apontamento.getDiaFolga()));
-		texto = String.format("O usuário %s da equipe %s desmarcou folga no dia $s", apontamento.getUsuario().getNome(),
+		texto = String.format("O usuário %s da equipe %s desmarcou folga no dia %s", apontamento.getUsuario().getNome(),
 				apontamento.getUsuario().getEquipe().getNomeEquipe(), dt.format(apontamento.getDiaFolga()));
 		mailConfig.enviarEmail(apontamento.getUsuario().getEmail(), assunto, texto);
 		mailConfig.enviarEmail("bernard_coutinho2002@hotmail.com", assunto, texto);
@@ -298,7 +298,7 @@ public class ApontamentoFeriasService {
 		DateTimeFormatter df = DateTimeFormatter.ISO_DATE;
 		String response;
 		if (dia.isAfter(userRequest.getDataVencimento()) || dia.isBefore(userRequest.getDataPodeIniciarFerias())) {
-			return ("Não foi possível marcar a folga! Marque entre " + df.format(userRequest.getDataPodeIniciarFerias())
+			return ("ERROR! Não foi possível marcar a folga! Marque entre " + df.format(userRequest.getDataPodeIniciarFerias())
 					+ " e " + df.format(userRequest.getDataVencimento()));
 		} else {
 
@@ -316,7 +316,7 @@ public class ApontamentoFeriasService {
 			if (userRequest.getNivel() == Nivel.SENIOR) {
 				if (senior >= 1 && quantMembros <= 12) {
 					response = String.format(
-							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time pequeno já foi alcançado (2)!",
+							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Sêniors de folga para um time pequeno já foi alcançado (1)!",
 							df.format(dia));
 					return (response);
 				} else if (senior >= 6 && quantMembros > 12 && quantMembros <= 24) {
@@ -336,7 +336,7 @@ public class ApontamentoFeriasService {
 			} else if (userRequest.getNivel() == Nivel.PLENO) {
 				if (pleno >= 1 && quantMembros <= 12) {
 					response = String.format(
-							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time pequeno já foi alcançado (2)!",
+							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time pequeno já foi alcançado (1)!",
 							df.format(dia));
 					return (response);
 				} else if (pleno >= 6 && quantMembros > 12 && quantMembros <= 24) {
@@ -346,7 +346,7 @@ public class ApontamentoFeriasService {
 					return (response);
 				} else if (pleno >= 8 && quantMembros > 24) {
 					response = String.format(
-							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time grande já foi alcançado (8)!",
+							"ERROR! Não foi possível marcar as férias no dia %s! Número máximo de Plenos de folga para um time grande já foi alcançado (8)!\n",
 							df.format(dia));
 					return (response);
 				} else {
