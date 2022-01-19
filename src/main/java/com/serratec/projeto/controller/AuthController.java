@@ -1,5 +1,6 @@
 package com.serratec.projeto.controller;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -24,7 +25,7 @@ import com.serratec.projeto.dto.CriarUsuarioDTO;
 import com.serratec.projeto.dto.JwtResponse;
 import com.serratec.projeto.dto.LoginRequest;
 import com.serratec.projeto.dto.MessageResponse;
-import com.serratec.projeto.repository.EquipeRepository;
+import com.serratec.projeto.model.Usuario;
 import com.serratec.projeto.repository.UsuarioRepository;
 import com.serratec.projeto.service.UsuarioService;
 
@@ -37,12 +38,9 @@ public class AuthController {
 
 	@Autowired
 	UsuarioRepository repository;
-	
+
 	@Autowired
 	UsuarioService userService;
-	
-	@Autowired
-	EquipeRepository equipeRepository;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -52,35 +50,32 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		System.out.println(loginRequest.getUsername());
+		System.out.println(loginRequest.getEmail());
 		System.out.println(loginRequest.getPassword());
 
 		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-
+		userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());	
+		Optional<Usuario> user = repository.findByEmail(loginRequest.getEmail());
+		userDetails.setId(user.get().getIdUsuario());
+		userDetails.setEmail(user.get().getEmail());
 		return ResponseEntity
-				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail()));
+				.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail(), user.get().getFotoBase64(), user.get().getNome(), user.get().getNivel().name()));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody CriarUsuarioDTO request) {
-		if (repository.existsByUsername(request.getUsername())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Erro: Usuário já existe !"));
-		}
-
 		if (repository.existsByEmail(request.getEmail())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Erro: Email já está sendo usado!"));
 		}
 
 		// Create new user's account
 		userService.criarUsuario(request);
-	
 
 		return ResponseEntity.ok(new MessageResponse("Usuário registrado com sucesso!"));
 	}

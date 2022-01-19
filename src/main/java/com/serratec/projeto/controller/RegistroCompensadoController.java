@@ -73,6 +73,19 @@ public class RegistroCompensadoController {
 
 	}
 
+	@GetMapping("/usuario/{id}")
+	@ApiOperation(value = "Buscar os registros compensados de um usuário", notes = "Busca os registros compensados de um usuário")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna os registros compensados do usuário"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Recurso proibido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro de servidor") })
+	public ResponseEntity<List<RegistroCompensado>> listRegUser(@PathVariable Long id) {
+
+		return service.listarRegUsuario(id);
+
+	}
+
 	@PutMapping("/{id}")
 	@ApiOperation(value = "Alterar registro compensado", notes = "Alteração de um registro compensado")
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Altera um registro compensado"),
@@ -86,7 +99,7 @@ public class RegistroCompensadoController {
 		return service.alterar(id, response);
 	}
 
-	@DeleteMapping("/id")
+	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Deletar um registro compensado", notes = "Deleta um registro compensado")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Exclui um registro compensado"),
 			@ApiResponse(code = 204, message = "Exclui um registro compensado e retorna vazio"),

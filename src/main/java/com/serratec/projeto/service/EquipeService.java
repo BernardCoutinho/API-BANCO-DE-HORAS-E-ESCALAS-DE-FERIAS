@@ -37,12 +37,12 @@ public class EquipeService {
 	 * @return RETORNA UMA EQUIPE
 	 */
 
-	public EquipeDTO criarEquipe( CriarEquipeDTO criarEquipeDTO) throws RecursoBadRequestException {
-		
+	public EquipeDTO criarEquipe(CriarEquipeDTO criarEquipeDTO) throws RecursoBadRequestException {
+
 		if (equipeRepository.findByNomeEquipe(criarEquipeDTO.getNomeEquipe()).isPresent()) {
 			throw new RecursoBadRequestException("Nome de equipe já cadastrado!");
 		}
-		
+
 		Equipe equipe = new Equipe(null);
 		equipe.setNomeEquipe(criarEquipeDTO.getNomeEquipe());
 		equipe.setLiderEquipe(criarEquipeDTO.getLiderEquipe());
@@ -92,7 +92,7 @@ public class EquipeService {
 	 * @return RETORNA UMA EQUIPE ALTERADA
 	 */
 
-	public EquipeDTO alterar(Long id, AlterarEquipeDTO alterarEquipeDTO)  throws RecursoNotFoundException {
+	public EquipeDTO alterar(Long id, AlterarEquipeDTO alterarEquipeDTO) throws RecursoNotFoundException {
 		if (equipeRepository.existsById(id)) {
 			Equipe equipe = new Equipe(alterarEquipeDTO);
 			equipe.setIdEquipe(id);
@@ -102,7 +102,7 @@ public class EquipeService {
 			return new EquipeDTO(equipe);
 		}
 		throw new RecursoNotFoundException("Equipe não encontrada!");
-		
+
 	}
 
 	/**
@@ -161,6 +161,7 @@ public class EquipeService {
 				userDTO.setNome(user.getNome());
 				userDTO.setEquipe(user.getEquipe());
 				userDTO.setIdUsuario(user.getIdUsuario());
+				userDTO.setFotoBase64(user.getFotoBase64());
 				listaDTO.add(userDTO);
 			}
 		}

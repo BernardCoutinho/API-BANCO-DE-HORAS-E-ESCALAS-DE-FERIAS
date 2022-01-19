@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 import com.serratec.projeto.model.Nivel;
-import com.serratec.projeto.model.Equipe;
+
 
 public class AlterarUsuarioDTO implements Serializable {
 	/**
@@ -14,13 +14,24 @@ public class AlterarUsuarioDTO implements Serializable {
 
 	private Nivel nivel;
 	private String email;
-	private Equipe equipe;
+	private Long equipe;
 	private String nome;
 	private String password;
 	private LocalDate dataPodeIniciarferias;
 	private LocalDate dataDeveIniciarferias;
 	public LocalDate dataVencimento;
 	public LocalDate dataContratacao;
+	private String fotoBase64;
+	
+	
+
+	public String getFotoBase64() {
+		return fotoBase64;
+	}
+
+	public void setFotoBase64(String fotoBase64) {
+		this.fotoBase64 = fotoBase64;
+	}
 
 	public Nivel getNivel() {
 		return nivel;
@@ -54,11 +65,11 @@ public class AlterarUsuarioDTO implements Serializable {
 		this.email = email;
 	}
 
-	public Equipe getEquipe() {
+	public Long getEquipe() {
 		return equipe;
 	}
 
-	public void setEquipe(Equipe equipe) {
+	public void setEquipe(Long equipe) {
 		this.equipe = equipe;
 	}
 

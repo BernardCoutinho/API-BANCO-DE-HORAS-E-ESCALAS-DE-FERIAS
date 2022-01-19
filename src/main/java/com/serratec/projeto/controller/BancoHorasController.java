@@ -88,7 +88,8 @@ public class BancoHorasController {
 
 	@PutMapping("/adicionarHoras")
 	@ApiOperation(value = "Adicionar Horas no banco de horas", notes = "Adiciona horas no banco de horas do usuário")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna as horas implementadas do banco de horas do usuário"),
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna as horas implementadas do banco de horas do usuário"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),
@@ -100,7 +101,8 @@ public class BancoHorasController {
 
 	@PutMapping("/removerHoras")
 	@ApiOperation(value = "Remover horas", notes = "Remove as horas do banco de horas do usuário")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna as horas removidas do banco de horas do usuário"),
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna as horas removidas do banco de horas do usuário"),
 			@ApiResponse(code = 401, message = "Erro de autenticação"),
 			@ApiResponse(code = 403, message = "Recurso proibido"),
 			@ApiResponse(code = 404, message = "Recurso não encontrado"),

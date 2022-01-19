@@ -8,8 +8,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.serratec.projeto.config.MailConfig;
 import com.serratec.projeto.dto.AlterarBancoHorasDTO;
 import com.serratec.projeto.dto.BancoHorasDTO;
@@ -50,7 +48,7 @@ public class BancoHorasService {
 	 * @return RETORNA UM BANCO DE HORAS
 	 */
 
-	public BancoHoras criarBancoHoras(@RequestBody CriarBancoHorasDTO request) {
+	public BancoHoras criarBancoHoras(CriarBancoHorasDTO request) {
 		BancoHoras bh = new BancoHoras();
 		bh.setSaldo_minutos(request.getSaldo_minutos());
 		bh.setUsuario(usuarioRepository.getById(request.getId_usuario()));
@@ -95,6 +93,7 @@ public class BancoHorasService {
 	public BancoHorasDTO alterar(Long id, AlterarBancoHorasDTO alterarBancoHorasDTO) throws RecursoNotFoundException {
 		if (bhRepository.existsById(id)) {
 			BancoHoras bancoHoras = new BancoHoras(alterarBancoHorasDTO);
+			bancoHoras.setId_banco(id);
 			bancoHoras.setSaldo_minutos(alterarBancoHorasDTO.getSaldo_minutos());
 			bancoHoras.setUsuario(alterarBancoHorasDTO.getUsuario());
 			bhRepository.save(bancoHoras);
@@ -225,6 +224,8 @@ public class BancoHorasService {
 			bh.setUsuario(zbh.getUsuario());
 			bh.setId_banco(zbh.getId_banco());
 			bhRepository.save(bh);
+			String texto = "Seu banco de horas foi zerado";
+			mailConfig.enviarEmail(bh.getUsuario().getEmail(), "AlterStatus - Banco de horas", texto);
 		}
 	}
 
@@ -234,7 +235,7 @@ public class BancoHorasService {
 
 	public void enviaEmails() {
 		String texto;
-		String assunto = "Seu Banco de horas";
+		String assunto = "AlterStatus - Seu Banco de horas";
 		List<BancoHoras> listbh = bhRepository.findAll();
 
 		for (BancoHoras bh : listbh) {

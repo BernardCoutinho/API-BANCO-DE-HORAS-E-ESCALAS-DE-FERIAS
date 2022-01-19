@@ -3,8 +3,6 @@ package com.serratec.projeto.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import com.serratec.projeto.model.Usuario;
-
 public class AlterarApontamentoFeriasDTO implements Serializable {
 
 	/**
@@ -30,7 +28,5 @@ public class AlterarApontamentoFeriasDTO implements Serializable {
 	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-
-	
 
 }

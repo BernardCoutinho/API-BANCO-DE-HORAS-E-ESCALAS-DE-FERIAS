@@ -52,6 +52,9 @@ public class Usuario implements Serializable {
 
 	@Column
 	private String password;
+	
+	@Column(columnDefinition="text")
+	private String fotoBase64;
 
 	@Column(name = "data_contratacao")
 	private LocalDate dataContratacao;
@@ -61,10 +64,10 @@ public class Usuario implements Serializable {
 
 	@Column(name = "data_pode_iniciar_ferias")
 	private LocalDate dataPodeIniciarFerias;
-	
+
 	@Column(name = "data_deve_iniciar_ferias")
 	private LocalDate dataDeveIniciarFerias;
-	
+
 	@Max(value = 30)
 	@Column(name = "qtdDiasFerias")
 	private int qtdDiasFerias;
@@ -112,8 +115,6 @@ public class Usuario implements Serializable {
 		this.equipe = equipe;
 	}
 
-	
-
 	public Nivel getNivel() {
 		return nivel;
 	}
@@ -128,6 +129,14 @@ public class Usuario implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getFotoBase64() {
+		return fotoBase64;
+	}
+
+	public void setFotoBase64(String fotoBase64) {
+		this.fotoBase64 = fotoBase64;
 	}
 
 	public String getEmail() {
@@ -161,7 +170,7 @@ public class Usuario implements Serializable {
 	public void setDataVencimento(LocalDate dataVencimento) {
 		this.dataVencimento = dataVencimento;
 	}
-	
+
 	public LocalDate getDataPodeIniciarFerias() {
 		return dataPodeIniciarFerias;
 	}
@@ -186,8 +195,6 @@ public class Usuario implements Serializable {
 		return result;
 	}
 
-	
-	
 	@Override
 	public String toString() {
 		return "Usuario [idUsuario=" + idUsuario + ", equipe=" + equipe + ", nivel=" + nivel + ", nome=" + nome

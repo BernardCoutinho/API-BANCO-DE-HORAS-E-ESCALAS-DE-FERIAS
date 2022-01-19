@@ -3,11 +3,11 @@ package com.serratec.projeto.service;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.serratec.projeto.dto.AlterarRegistroCompensacaoDTO;
 import com.serratec.projeto.dto.CriarRegistroCompensacaoDTO;
@@ -39,12 +39,13 @@ public class RegistroCompensacaoService {
 	 * @return RETORNA UM REGISTRO COMPENSAÇÃO
 	 */
 
-	public RegistroCompensacao criarRegistroCompensacao(@RequestBody CriarRegistroCompensacaoDTO request) {
+	public RegistroCompensacao criarRegistroCompensacao( CriarRegistroCompensacaoDTO request) {
 		RegistroCompensacao registro = new RegistroCompensacao();
 		registro.setUsuario(usuarioRepository.getById(request.getIdUsuario()));
 		registro.setHoraInicio(request.getHrInicioCompensacao());
 		registro.setHoraTermino(request.getHrTerminoCompensacao());
-		long minTotais = Duration.between(request.getHrInicioCompensacao(), request.getHrTerminoCompensacao()).toMinutes();
+		long minTotais = Duration.between(request.getHrInicioCompensacao(), request.getHrTerminoCompensacao())
+				.toMinutes();
 		registro.setHoraTotal(minTotais);
 		registro.setData(request.getDataCompensacao());
 		System.out.println(registro.toString());
@@ -63,6 +64,15 @@ public class RegistroCompensacaoService {
 
 	}
 
+	public ResponseEntity<List<RegistroCompensacao>> listarRegUsuario(Long id) throws RecursoNotFoundException {
+		if (!usuarioRepository.existsById(id))
+			throw new RecursoNotFoundException("Usuário não encontrado");
+
+		List<RegistroCompensacao> listR = repository.findAll();
+		listR = listR.stream().filter((u) -> u.getUsuario().getIdUsuario() == id).collect(Collectors.toList());
+		return ResponseEntity.ok(listR);
+	}
+
 	/**
 	 * MÉTODO PARA BUSCAR UM REGISTRO COMPENSAÇÃO POR ID
 	 * 
@@ -78,7 +88,6 @@ public class RegistroCompensacaoService {
 			throw new RecursoNotFoundException("Registro Compensação não encontrado");
 		}
 
-//		return ResponseEntity.notFound().build();
 	}
 
 	/**

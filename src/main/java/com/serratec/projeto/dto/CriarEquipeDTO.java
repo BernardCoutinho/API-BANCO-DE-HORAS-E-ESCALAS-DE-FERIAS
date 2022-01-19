@@ -11,7 +11,6 @@ public class CriarEquipeDTO implements Serializable {
 	private String nomeEquipe;
 	private String liderEquipe;
 
-
 	public String getNomeEquipe() {
 		return nomeEquipe;
 	}
@@ -27,6 +26,5 @@ public class CriarEquipeDTO implements Serializable {
 	public void setLiderEquipe(String liderEquipe) {
 		this.liderEquipe = liderEquipe;
 	}
-
 
 }

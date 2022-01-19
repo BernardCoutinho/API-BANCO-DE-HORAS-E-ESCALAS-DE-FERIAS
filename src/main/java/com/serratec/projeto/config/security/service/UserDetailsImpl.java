@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Long id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
@@ -37,17 +37,10 @@ public class UserDetailsImpl implements UserDetails {
 
 	public static UserDetailsImpl build(Usuario user) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		 authorities.add(new SimpleGrantedAuthority("role"));
-		return new UserDetailsImpl(user.getEmail(), user.getPassword(),  authorities);
-				
-//				UserDetailsImpl(
-//				user.getIdUsuario(),
-//				user.getNome(),
-//				user.getEmail(),
-//				user.getUsername(),
-//				user.getPassword(),
-//				authorities);
+		authorities.add(new SimpleGrantedAuthority("role"));
+		return new UserDetailsImpl(user.getEmail(), user.getPassword(), authorities);
 	}
+	
 	
 
 	public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -55,6 +48,24 @@ public class UserDetailsImpl implements UserDetails {
 		this.username = username;
 		this.password = password;
 		this.authorities = authorities;
+	}
+	
+	
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override

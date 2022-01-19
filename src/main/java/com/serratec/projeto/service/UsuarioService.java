@@ -1,16 +1,13 @@
 package com.serratec.projeto.service;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.serratec.projeto.config.MailConfig;
 import com.serratec.projeto.dto.AlterarUsuarioDTO;
@@ -35,18 +32,15 @@ public class UsuarioService {
 
 	@Autowired
 	private BancoHorasService bhService;
-	
+
 	@Autowired
 	private BancoHorasRepository bhRepository;
-	
+
 	@Autowired
 	MailConfig mailConfig;
 
 	@Autowired
 	PasswordEncoder encoder;
-
-	@Autowired
-	private FotoService fotoService;
 
 	/**
 	 * MÉTODO PARA CRIAR UM NOVO USUÁRIO
@@ -65,12 +59,12 @@ public class UsuarioService {
 		if (usuarioRepository.findByEmail(criarUsuarioDTO.getEmail()).isPresent()) {
 			throw new RecursoBadRequestException("Email já cadastrado!");
 		}
-
+		String senhaUnd = criarUsuarioDTO.getPassword();
 		Usuario usuario = new Usuario();
 		Long saldo = (long) 0;
 		usuario.setNome(criarUsuarioDTO.getNome());
 		usuario.setUsername(criarUsuarioDTO.getUsername());
-		usuario.setEquipe(equipeRepository.findById(criarUsuarioDTO.getIdEquipe()).get());
+		usuario.setEquipe(equipeRepository.getById(criarUsuarioDTO.getIdEquipe()));
 		usuario.setNivel(criarUsuarioDTO.getNivel());
 		usuario.setDataContratacao(criarUsuarioDTO.getDataContratacao());
 		usuario.setDataPodeIniciarFerias(criarUsuarioDTO.getDataContratacao().plusYears(1));
@@ -78,40 +72,18 @@ public class UsuarioService {
 		usuario.setDataVencimento(criarUsuarioDTO.getDataContratacao().plusYears(2));
 		usuario.setEmail(criarUsuarioDTO.getEmail());
 		usuario.setQtdDiasFerias(30);
+		usuario.setFotoBase64(criarUsuarioDTO.getFotoBase64());
 		usuario.setPassword(encoder.encode(criarUsuarioDTO.getPassword()));
 		usuarioRepository.save(usuario);
 		CriarBancoHorasDTO bancoDTO = new CriarBancoHorasDTO(usuario.getIdUsuario(), saldo);
 		bhService.criarBancoHoras(bancoDTO);
-		
+
 		String texto = "Usuario cadastrado com sucesso!\nSeu Login: %s \nSua Senha: %s\nAo acessar pela primeira vez mude a sua senha!\nAcesse pelo Link para mudar: %s";
-		texto = String.format(texto, usuario.getEmail(), usuario.getPassword(), "LinkDaPag");
-		mailConfig.enviarEmail(usuario.getEmail(), "Cadastro de Usuário Concluído", texto);
-		
+		texto = String.format(texto, usuario.getEmail(), senhaUnd, "http://localhost:3000/alterar-senha");
+		mailConfig.enviarEmail(criarUsuarioDTO.getEmail(), "AlterStatus - Cadastro de Usuário Concluído", texto);
+
 		return new UsuarioDTO(usuario);
 
-	}
-
-	/**
-	 * MÉTODO PARA INSERIR FOTO
-	 */
-	private UsuarioDTO adicionarUriFoto(Usuario usuario) {
-
-		UsuarioDTO usuarioDto = new UsuarioDTO();
-		usuarioDto.setIdUsuario(usuario.getIdUsuario());
-		usuarioDto.setNome(usuario.getNome());
-		usuarioDto.setUsername(usuario.getUsername());
-		usuarioDto.setEmail(usuario.getEmail());
-		usuarioDto.setNivel(usuario.getNivel());
-		usuarioDto.setEquipe(usuario.getEquipe());
-		usuarioDto.setDataContratacao(usuario.getDataContratacao());
-		usuarioDto.setDataPodeIniciarFerias(usuario.getDataPodeIniciarFerias());
-		usuarioDto.setDataDeveIniciarFerias(usuario.getDataDeveIniciarFerias());
-		usuarioDto.setDataVencimento(usuario.getDataVencimento());
-		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-				.path("/projeto-alter/usuarios/{id}/foto").buildAndExpand(usuario.getIdUsuario()).toUri();
-		usuarioDto.setUri(uri.toString());
-
-		return usuarioDto;
 	}
 
 	/**
@@ -127,7 +99,6 @@ public class UsuarioService {
 		for (Usuario usuario : usuarios) {
 			UsuarioDTO usuarioDTO = new UsuarioDTO(usuario);
 			usuariosDTO.add(usuarioDTO);
-			usuariosDTO.add(adicionarUriFoto(usuario));
 		}
 
 		return usuariosDTO;
@@ -140,10 +111,10 @@ public class UsuarioService {
 	 * @return
 	 */
 
-	public UsuarioDTO buscar(Long id) throws RecursoNotFoundException {
-		Optional<Usuario> usuario = usuarioRepository.findById(id);
-		if (usuario.isPresent()) {
-			return adicionarUriFoto(usuario.get());
+	public Usuario buscar(Long id) throws RecursoNotFoundException {
+		Usuario usuario = usuarioRepository.getById(id);
+		if (usuario != null) {
+			return usuario;
 		} else {
 			throw new RecursoNotFoundException("Usuario não encontrado");
 		}
@@ -178,25 +149,44 @@ public class UsuarioService {
 			Usuario usuario = new Usuario(alterarUsuarioDTO);
 			usuario.setIdUsuario(id);
 			usuario.setNome(alterarUsuarioDTO.getNome());
-			usuario.setPassword(alterarUsuarioDTO.getPassword());
+			usuario.setPassword(encoder.encode(alterarUsuarioDTO.getPassword()));
 			usuario.setEmail(alterarUsuarioDTO.getEmail());
 			usuario.setNivel(alterarUsuarioDTO.getNivel());
-			usuario.setEquipe(alterarUsuarioDTO.getEquipe());
+			usuario.setEquipe(equipeRepository.getById(alterarUsuarioDTO.getEquipe()));
 			usuario.setDataContratacao(alterarUsuarioDTO.getDataContratacao());
 			usuario.setDataPodeIniciarFerias(alterarUsuarioDTO.getDataPodeIniciarferias());
 			usuario.setDataDeveIniciarFerias(alterarUsuarioDTO.getDataDeveIniciarferias());
 			usuario.setDataVencimento(alterarUsuarioDTO.getDataVencimento());
+			usuario.setFotoBase64(alterarUsuarioDTO.getFotoBase64());
 			String texto = "Usuario alterado com sucesso!\nSeu Login: %s \nSua Senha: %s";
-			texto = String.format(texto, usuario.getEmail(), usuario.getPassword()); 
-			adicionarUriFoto(usuario);
-			mailConfig.enviarEmail(usuario.getEmail(), "Alteração de Usuário Concluída",
-			 texto);
+			texto = String.format(texto, usuario.getEmail(), usuario.getPassword());
+			mailConfig.enviarEmail(usuario.getEmail(), "Alteração de Usuário Concluída", texto);
 
 			usuarioRepository.save(usuario);
 			return new UsuarioDTO(usuario);
 		}
 		throw new RecursoNotFoundException("Usuario não encontrado");
 	}
+	
+	public UsuarioDTO alterarSenha(Long id, String senha) {
+			
+		if (usuarioRepository.existsById(id)) {
+			Usuario user = usuarioRepository.getById(id);
+			user.setPassword(encoder.encode(senha));
+			usuarioRepository.save(user);
+			return new UsuarioDTO(user);
+		}
+		throw new RecursoNotFoundException("Usuario não encontrado");
+	}
+
+
+	/**
+	 * MÉTODO PARA DESCONTAR AS FÉRIAS DO USUÁRIO
+	 * 
+	 * @param usuario
+	 * @param numDias
+	 * @return
+	 */
 
 	public UsuarioDTO DescontarFerias(Usuario usuario, int numDias) {
 		Usuario user = usuario;
@@ -205,25 +195,31 @@ public class UsuarioService {
 		return new UsuarioDTO(user);
 	}
 
+	/**
+	 * MÉTODO PARA ACRESCENTAR AS FÉRIAS DO USUÁRIO
+	 */
+
 	public UsuarioDTO acrescentarFerias(Long id, int numDias) {
 		Usuario user = usuarioRepository.getById(id);
 		user.setQtdDiasFerias(user.getQtdDiasFerias() + numDias);
 		usuarioRepository.save(user);
 		return new UsuarioDTO(user);
 	}
-	
+
+	/**
+	 * MÉTODO PARA RESETAR A QUANTIDADE DE FÉRIAS E ALTERAR AS DATAS DO USUÁRIO
+	 */
+
 	public void resetarQuantidadeFeriasEAlterarDatas() {
 		List<Usuario> listUser = usuarioRepository.findAll();
 		LocalDate diaAtual = LocalDate.now();
-		listUser.stream()
-		.filter((e) -> e.getDataVencimento().getDayOfYear() == diaAtual.getDayOfYear())
-		.forEach(e -> {
-				Usuario user = e;
-				user.setQtdDiasFerias(30);
-				user.setDataPodeIniciarFerias(user.getDataPodeIniciarFerias().plusYears(1));
-				user.setDataDeveIniciarFerias(user.getDataDeveIniciarFerias().plusYears(1));
-				user.setDataVencimento(user.getDataVencimento().plusYears(1));
-				usuarioRepository.save(user);	
+		listUser.stream().filter((e) -> e.getDataVencimento().getDayOfYear() == diaAtual.getDayOfYear()).forEach(e -> {
+			Usuario user = e;
+			user.setQtdDiasFerias(30);
+			user.setDataPodeIniciarFerias(user.getDataPodeIniciarFerias().plusYears(1));
+			user.setDataDeveIniciarFerias(user.getDataDeveIniciarFerias().plusYears(1));
+			user.setDataVencimento(user.getDataVencimento().plusYears(1));
+			usuarioRepository.save(user);
 		});
 	}
 

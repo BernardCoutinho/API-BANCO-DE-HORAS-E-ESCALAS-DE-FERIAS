@@ -61,6 +61,18 @@ public class RegistroCompensacaoController {
 		return service.listar();
 	}
 
+	@GetMapping("/usuario/{id}")
+	@ApiOperation(value = "Listar registros compensações de um usuário", notes = "Lista os registros de compensações de um usuário")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Retorna uma lista de registros compensações do usuário"),
+			@ApiResponse(code = 401, message = "Erro de autenticação"),
+			@ApiResponse(code = 403, message = "Recurso proibido"),
+			@ApiResponse(code = 404, message = "Recurso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro de servidor") })
+	public ResponseEntity<List<RegistroCompensacao>> listRegUser(@PathVariable Long id) {
+		return service.listarRegUsuario(id);
+	}
+
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Buscar um registro compensação", notes = "Busca um registro compensação")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Retorna um registro compensação"),
@@ -86,7 +98,7 @@ public class RegistroCompensacaoController {
 		return service.alterar(id, response);
 	}
 
-	@DeleteMapping("/id")
+	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Deletar um registro compensação", notes = "Deleta um registro compensação")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Exclui um registro compensação"),
 			@ApiResponse(code = 204, message = "Exclui um registro compensação e retorna vazio"),

@@ -26,14 +26,12 @@ public class Equipe {
 	private String liderEquipe;
 
 	public Equipe(AlterarEquipeDTO alterarEquipeDTO) {
-	
+
 	}
-	
 
 	public Equipe() {
 		super();
 	}
-
 
 	public Long getIdEquipe() {
 		return idEquipe;
@@ -58,7 +56,6 @@ public class Equipe {
 	public void setLiderEquipe(String liderEquipe) {
 		this.liderEquipe = liderEquipe;
 	}
-	
 
 	public Equipe(Long idEquipe, String nomeEquipe, String liderEquipe) {
 		super();

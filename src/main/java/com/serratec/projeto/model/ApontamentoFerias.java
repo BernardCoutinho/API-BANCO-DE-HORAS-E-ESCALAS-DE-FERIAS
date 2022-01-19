@@ -2,7 +2,6 @@ package com.serratec.projeto.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +25,6 @@ public class ApontamentoFerias {
 	@Column(name = "id_apontamento")
 	private Long id_apontamento;
 
-	
 	@Column(name = "dia_folga")
 	private LocalDate diaFolga;
 
@@ -64,7 +62,7 @@ public class ApontamentoFerias {
 	}
 
 	public ApontamentoFerias(AlterarApontamentoFeriasDTO alterarApontamentoFeriasDTO) {
-		
+
 	}
 
 }

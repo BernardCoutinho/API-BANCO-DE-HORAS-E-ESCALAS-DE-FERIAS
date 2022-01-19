@@ -3,7 +3,6 @@ package com.serratec.projeto.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.serratec.projeto.dto.AlterarRegistroCompensacaoDTO;
@@ -28,7 +26,7 @@ public class RegistroCompensacao {
 	@Column(name = "id_registro_compensacao")
 	private Long idRegCompensacao;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
@@ -88,10 +86,6 @@ public class RegistroCompensacao {
 		return horaTotal;
 	}
 
-
-
-
-
 	public void setHoraTotal(Long horaTotal) {
 		this.horaTotal = horaTotal;
 	}
@@ -113,6 +107,6 @@ public class RegistroCompensacao {
 	}
 
 	public RegistroCompensacao(AlterarRegistroCompensacaoDTO alterarRegistroCompensacaoDTO) {
-		
+
 	}
 }

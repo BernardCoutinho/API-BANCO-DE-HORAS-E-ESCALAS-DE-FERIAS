@@ -31,9 +31,10 @@ public class CriarUsuarioDTO implements Serializable {
 	private String email;
 
 	private String username;
+	
+	private String fotoBase64;
 
 	private LocalDate dataContratacao;
-
 
 	@NotBlank
 	private String password;
@@ -49,7 +50,16 @@ public class CriarUsuarioDTO implements Serializable {
 		this.password = usuario.getPassword();
 		this.email = usuario.getEmail();
 		this.dataContratacao = usuario.getDataContratacao();
+		this.fotoBase64 = usuario.getFotoBase64();
 
+	}
+
+	public String getFotoBase64() {
+		return fotoBase64;
+	}
+
+	public void setFotoBase64(String fotoBase64) {
+		this.fotoBase64 = fotoBase64;
 	}
 
 	public Long getIdEquipe() {
